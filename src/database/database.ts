@@ -8,6 +8,9 @@ const connectDatabase = async () => {
       process.env.MONGODB_URL ?? "",
     );
 
+    console.log("Connecting to:", process.env.MONGODB_URL);
+
+
     if (databaseConnection) {
       console.log("database connected successfully");
     } else {
