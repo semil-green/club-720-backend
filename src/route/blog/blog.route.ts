@@ -1,6 +1,6 @@
 import express from "express";
-import { addNewBlogController, deleteBlogController, editBlogController, getAllBlogsController, getBlogByIdController, getWebsiteBlogsController, globalSearchBlogsController, updateBlogStatusController } from "../../controller/blogs/blogs.controller";
-import { authMiddleware } from "../../middleware/auth.middleware";
+import { addNewBlogController, deleteBlogController, editBlogController, getAllBlogsController, getBlogByIdController, getWebsiteBlogsController, globalSearchBlogsController, updateBlogStatusController } from "../../controller/blogs/blogs.controller.js";
+import { authMiddleware } from "../../middleware/auth.middleware.js";
 const blogRouter = express.Router();
 
 // admin routes

@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import connectDatabase from "./database/database";
-import blogRouter from "./route/blog/blog.route";
-import adminRouter from "./route/admin/admin.route";
+import connectDatabase from "./database/database.js";
+import blogRouter from "./route/blog/blog.route.js";
+import adminRouter from "./route/admin/admin.route.js";
 dotenv.config();
 const app = express();
 

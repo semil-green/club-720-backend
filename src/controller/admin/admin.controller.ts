@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import Admin from "../../schema/admin/admin.schema";
+import Admin from "../../schema/admin/admin.schema.js";
 
 export const createNewUserController = async (req: Request, res: Response) => {
 
