@@ -37,18 +37,33 @@ export const addNewBlogController = [
     },
 ];
 
+
+
 export const getAllBlogsController = async (req: Request, res: Response) => {
     try {
-        const { page, limit } = req.body;
+        const page = Number(req.body.page || req.query.page || 1);
+        const limit = Number(req.body.limit || req.query.limit || 10);
+        const search = String(req.body.search || req.query.search || "").trim();
 
         const skip = (page - 1) * limit;
 
-        const blogs = await Blogs.find()
+        let filter: any = {};
+
+        if (search !== "") {
+            filter = {
+                $or: [
+                    { title: { $regex: search, $options: "i" } },
+                    { description: { $regex: search, $options: "i" } }
+                ]
+            };
+        }
+
+        const blogs = await Blogs.find(filter)
             .sort({ date: -1 })
             .skip(skip)
             .limit(limit);
 
-        const totalBlogs = await Blogs.countDocuments();
+        const totalBlogs = await Blogs.countDocuments(filter);
 
         res.status(200).send({
             blogs,
@@ -63,6 +78,8 @@ export const getAllBlogsController = async (req: Request, res: Response) => {
         res.status(400).send({ result: "Failed to fetch blogs" });
     }
 };
+
+
 
 export const editBlogController = [
     upload.single("image"),
