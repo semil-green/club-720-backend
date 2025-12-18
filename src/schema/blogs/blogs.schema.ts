@@ -1,8 +1,11 @@
 import mongoose from "mongoose";
 
 const blogSchema = new mongoose.Schema({
-
     title: {
+        type: String,
+        required: true
+    },
+    slug: {
         type: String,
         required: true
     },
@@ -13,6 +16,14 @@ const blogSchema = new mongoose.Schema({
     image: {
         type: String,
         default: null
+    },
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category"
+    },
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Author"
     },
     date: {
         type: Date,

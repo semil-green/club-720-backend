@@ -9,7 +9,7 @@ export const addNewBlogController = [
     upload.single("image"),
     async (req: Request, res: Response) => {
         try {
-            const { title, description, date, status } = req.body;
+            const { title, slug, description, image, category, author, date, status } = req.body;
 
             const file = (req as any).file;
             if (!file) return res.status(400).send({ message: "No image provided" });
@@ -20,8 +20,11 @@ export const addNewBlogController = [
 
             const saveBlog = await Blogs.create({
                 title,
+                slug,
                 description,
                 image: blob.url,
+                category,
+                author,
                 date,
                 status,
             });
@@ -59,6 +62,8 @@ export const getAllBlogsController = async (req: Request, res: Response) => {
         }
 
         const blogs = await Blogs.find(filter)
+            .populate("category")
+            .populate("author")
             .sort({ date: -1 })
             .skip(skip)
             .limit(limit);
@@ -85,7 +90,8 @@ export const editBlogController = [
     upload.single("image"),
     async (req: Request, res: Response) => {
         try {
-            const { id, title, description, date, status, image } = req.body;
+            const { id, title, slug, description, image, category, author, date, status } = req.body;
+
 
             let imageUrl = image;
 
@@ -105,8 +111,11 @@ export const editBlogController = [
                 id,
                 {
                     title,
+                    slug,
                     description,
                     image: imageUrl,
+                    category,
+                    author,
                     date,
                     status,
                 },
@@ -169,9 +178,9 @@ export const getBlogByIdController = async (req: Request, res: Response) => {
 
     try {
 
-        const { id } = req.params;
+        const { slug } = req.body;
 
-        const blog = await Blogs.findById(id);
+        const blog = await Blogs.findOne({ slug })
 
         if (blog) {
             res.status(200).send({ message: "Blog fetched successfully", result: blog })
@@ -312,4 +321,3 @@ export const globalSearchBlogsController = async (req: Request, res: Response) =
         res.status(500).send({ result: "Failed to search blogs" });
     }
 }
-

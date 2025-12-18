@@ -1,5 +1,11 @@
-import jwt from "jsonwebtoken";
-export const authMiddleware = (req, res, next) => {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.authMiddleware = void 0;
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const authMiddleware = (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
         if (!authHeader) {
@@ -7,7 +13,7 @@ export const authMiddleware = (req, res, next) => {
             return;
         }
         const jwtSecretKey = process.env.JWT_SECRET_KEY;
-        jwt.verify(authHeader, jwtSecretKey, (err, decoded) => {
+        jsonwebtoken_1.default.verify(authHeader, jwtSecretKey, (err, decoded) => {
             if (err) {
                 res.status(401).send({ result: "Invalid or expired token" });
                 return;
@@ -20,3 +26,4 @@ export const authMiddleware = (req, res, next) => {
         res.status(500).send({ result: "Authentication error" });
     }
 };
+exports.authMiddleware = authMiddleware;

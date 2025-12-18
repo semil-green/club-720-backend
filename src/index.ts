@@ -3,8 +3,12 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import connectDatabase from "./database/database.js";
+
 import blogRouter from "./route/blog/blog.route.js";
-import adminRouter from "./route/admin/admin.route.js";
+import categoryRouter from "./route/category/category.route.js";
+import teamMemberRouter from "./route/team-member/teamMember.route.js";
+import authorRouter from "./route/author/author.route.js";
+
 dotenv.config();
 const app = express();
 
@@ -13,8 +17,9 @@ app.use(cors());
 app.use(express.json());
 connectDatabase();
 
-app.use("/user", adminRouter);
+app.use("/user", teamMemberRouter);
 app.use("/blog", blogRouter);
-
+app.use("/category", categoryRouter);
+app.use("/author", authorRouter);
 
 app.listen(process.env.MONGODB_PORT, () => console.log(`server running : ${process.env.MONGODB_PORT}`));
