@@ -5,10 +5,10 @@ dotenv.config();
 const connectDatabase = async () => {
   try {
 
-    console.log("Connecting to:", process.env.MONGODB_URL);
+    console.log("Connecting to:", process.env.DATABASE_URL);
 
     const databaseConnection = await mongoose.connect(
-      process.env.MONGODB_URL ?? "",
+      process.env.DATABASE_URL ?? "",
     );
 
     console.log("Connected DB:", mongoose.connection.db.databaseName);
