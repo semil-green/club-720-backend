@@ -37,16 +37,9 @@ app.use("/category", categoryRouter);
 app.use("/author", authorRouter);
 
 const startServer = async () => {
-    try {
-        await connectDatabase();
-    } catch (err) {
-        console.error("Database connection failed, continuing without DB", err);
-    }
+    await connectDatabase();
 
-    const PORT = process.env.PORT;
-    if (!PORT) {
-        throw new Error("PORT is not defined");
-    }
+    const PORT = process.env.PORT || 8080;
 
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
