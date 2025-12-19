@@ -16,6 +16,26 @@ export const createNewTeamMemberController = async (req: Request, res: Response)
             return;
         }
 
+        if (!name) {
+            res.status(400).send({ result: "Name is required" });
+            return;
+        }
+
+        if (!email) {
+            res.status(400).send({ result: "Email is required" });
+            return;
+        }
+
+        if (!password) {
+            res.status(400).send({ result: "Password is required" });
+            return;
+        }
+
+        if (!role) {
+            res.status(400).send({ result: "Role is required" });
+            return;
+        }
+
         const saltRounds = 10;
 
         const hashedPassword = await bcrypt.hash(password, saltRounds);
