@@ -8,6 +8,8 @@ import { ROLES } from "../../constants/roles";
 export const createNewTeamMemberController = async (req: Request, res: Response) => {
 
     try {
+        console.log("BODY:", req.body);
+
         const { name, email, password, role, status } = req.body;
         const checkIfEmailExists = await TeamMember.findOne({ email: email });
 
