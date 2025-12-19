@@ -1,7 +1,7 @@
 import express from "express"
-import { createNewTeamMemberController, editTeamMemberController, teamMemberLoginController, updateTeamMemberStatus } from "../../controller/team-member/teamMember.controller.js";
-import { verifyAuthTokenAndRole } from "../../middleware/auth.middleware.js";
-import { ROLES } from "../../constants/roles.js";
+import { createNewTeamMemberController, editTeamMemberController, teamMemberLoginController, updateTeamMemberStatus } from "../../controller/team-member/teamMember.controller";
+import { verifyAuthTokenAndRole } from "../../middleware/auth.middleware";
+import { ROLES } from "../../constants/roles";
 const teamMemberRouter = express.Router();
 
 teamMemberRouter.post("/create", createNewTeamMemberController)

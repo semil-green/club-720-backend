@@ -1,7 +1,7 @@
 import express from "express";
-import { addNewBlogController, deleteBlogController, editBlogController, getAllBlogsController, getBlogByIdController, getWebsiteBlogsController, globalSearchBlogsController, updateBlogStatusController } from "../../controller/blogs/blogs.controller.js";
-import { verifyAuthTokenAndRole } from "../../middleware/auth.middleware.js";
-import { ROLES } from "../../constants/roles.js";
+import { addNewBlogController, deleteBlogController, editBlogController, getAllBlogsController, getBlogByIdController, getWebsiteBlogsController, globalSearchBlogsController, updateBlogStatusController } from "../../controller/blogs/blogs.controller";
+import { verifyAuthTokenAndRole } from "../../middleware/auth.middleware";
+import { ROLES } from "../../constants/roles";
 const blogRouter = express.Router();
 
 // admin routes

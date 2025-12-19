@@ -1,7 +1,7 @@
 import express from "express";
-import { addNewAuthorController, editAuthorController, getAllAuthorsController, updateAuthorStatusController } from "../../controller/author/author.controller.js";
-import { verifyAuthTokenAndRole } from "../../middleware/auth.middleware.js";
-import { ROLES } from "../../constants/roles.js";
+import { addNewAuthorController, editAuthorController, getAllAuthorsController, updateAuthorStatusController } from "../../controller/author/author.controller";
+import { verifyAuthTokenAndRole } from "../../middleware/auth.middleware";
+import { ROLES } from "../../constants/roles";
 
 const authorRouter = express.Router();
 

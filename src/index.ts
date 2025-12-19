@@ -10,11 +10,11 @@ process.on("unhandledRejection", (reason) => {
     console.error("UNHANDLED REJECTION:", reason);
 });
 
-import connectDatabase from "./database/database.js";
-import blogRouter from "./route/blog/blog.route.js";
-import categoryRouter from "./route/category/category.route.js";
-import teamMemberRouter from "./route/team-member/teamMember.route.js";
-import authorRouter from "./route/author/author.route.js";
+import connectDatabase from "./database/database";
+import blogRouter from "./route/blog/blog.route";
+import categoryRouter from "./route/category/category.route";
+import teamMemberRouter from "./route/team-member/teamMember.route";
+import authorRouter from "./route/author/author.route";
 
 dotenv.config();
 

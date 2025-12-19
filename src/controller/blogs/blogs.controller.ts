@@ -1,4 +1,4 @@
-import Blogs from "../../schema/blogs/blogs.schema.js";
+import Blogs from "../../schema/blogs/blogs.schema";
 import { Request, Response } from "express";
 import { put } from "@vercel/blob";
 import multer from "multer";
