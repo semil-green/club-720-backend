@@ -8,7 +8,6 @@ import { ROLES } from "../../constants/roles";
 export const createNewTeamMemberController = async (req: Request, res: Response) => {
 
     try {
-        console.log("BODY:", req.body);
 
         const { name, email, password, role, status } = req.body;
         const checkIfEmailExists = await TeamMember.findOne({ email: email });
@@ -117,7 +116,7 @@ export const editTeamMemberController = async (req: Request, res: Response) => {
         }, { new: true });
 
         if (updateTeamMember) {
-            res.status(200).send({ result: updateTeamMember, message: "Team member updated successfully" });
+            res.status(200).send({ result: updateTeamMember, message: role === ROLES.admin ? "Admin updated successfully" : "Team member updated successfully" });
         }
     }
     catch (err) {
