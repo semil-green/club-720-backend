@@ -36,6 +36,8 @@ app.use("/blog", blogRouter);
 app.use("/category", categoryRouter);
 app.use("/author", authorRouter);
 
+console.log("BOOT: index.ts loaded");
+
 const startServer = async () => {
     await connectDatabase();
 
