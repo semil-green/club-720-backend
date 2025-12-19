@@ -2,14 +2,6 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-process.on("uncaughtException", (err) => {
-    console.error("UNCAUGHT EXCEPTION:", err);
-});
-
-process.on("unhandledRejection", (reason) => {
-    console.error("UNHANDLED REJECTION:", reason);
-});
-
 import connectDatabase from "./database/database";
 import blogRouter from "./route/blog/blog.route";
 import categoryRouter from "./route/category/category.route";
@@ -43,25 +35,14 @@ const startServer = async () => {
     const PORT = Number(process.env.PORT) || 5000;
 
     app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+        // console.log(`Server running on port ${PORT}`);
 
         connectDatabase()
             .then(() => console.log("Database connected"))
-            .catch((err) => console.error("Database error", err));
+        // .catch((err) => console.error("Database error", err));
     });
 };
 
 startServer();
 
-// import express from "express";
 
-// const app = express();
-
-// app.get("/health", (_req, res) => {
-//     res.send("OK");
-// });
-
-// const PORT = 5000;
-// app.listen(PORT, () => {
-//     console.log("Server running on port", PORT);
-// });
