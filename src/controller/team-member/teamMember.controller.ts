@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import TeamMember from "../../schema/team-member/teamMember.schema";
+import { ROLES } from "../../constants/roles";
 
 
 export const createNewTeamMemberController = async (req: Request, res: Response) => {
@@ -28,12 +29,10 @@ export const createNewTeamMemberController = async (req: Request, res: Response)
         });
 
         if (saveNewUser) {
-            res.status(200).send({ result: saveNewUser, message: "Admin created successfully" });
+            res.status(200).send({ result: saveNewUser, message: role === ROLES.admin ? "Admin created successfully" : "Team member created successfully" });
         }
-
     }
     catch (err) {
-        console.log("err ", err)
         res.status(400).send({ result: "Failed to ceate new user" });
     }
 }
@@ -45,7 +44,7 @@ export const teamMemberLoginController = async (req: Request, res: Response) => 
         const checkIfEmailExists = await TeamMember.findOne({ email: email });
 
         if (!checkIfEmailExists) {
-            res.status(400).send({ result: "Email does not exist" });
+            res.status(400).send({ result: "", message: "Email does not exist" });
             return;
         }
 
@@ -55,7 +54,7 @@ export const teamMemberLoginController = async (req: Request, res: Response) => 
         );
 
         if (!verifyPassword) {
-            res.status(400).send({ result: "Password is incorrect" });
+            res.status(400).send({ result: "", message: "Password is incorrect" });
             return;
         }
 
@@ -63,10 +62,10 @@ export const teamMemberLoginController = async (req: Request, res: Response) => 
 
         const authToken = await jwt.sign(
             {
-                email: checkIfEmailExists?.email,
+                role: checkIfEmailExists?.role,
             },
             jwtSecretKey,
-            { expiresIn: "1y" },
+            { expiresIn: "1d" },
         );
 
         if (authToken) {
@@ -115,10 +114,10 @@ export const updateTeamMemberStatus = async (req: Request, res: Response) => {
         }, { new: true });
 
         if (updateTeamMemberStatus) {
-            res.status(200).send({ result: updateTeamMemberStatus, message: "Team member status updated successfully" });
+            res.status(200).send({ result: updateTeamMemberStatus, message: "Status updated successfully" });
         }
     }
     catch (err) {
-        res.status(400).send({ result: "Failed to update team member status" });
+        res.status(400).send({ result: "Failed to update status" });
     }
 }

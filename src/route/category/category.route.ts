@@ -1,17 +1,17 @@
 import express from "express"
 import { addNewCategoryController, editCategoryController, getAllCategoriesController, updateCategoryStatusController } from "../../controller/category/category.controller";
-import { authMiddleware } from "../../middleware/auth.middleware";
+import { verifyAuthTokenAndRole } from "../../middleware/auth.middleware";
+import { ROLES } from "../../constants/roles";
 
 
 const categoryRouter = express.Router();
 
+categoryRouter.post("/create", verifyAuthTokenAndRole([ROLES.admin]), addNewCategoryController)
 
-categoryRouter.post("/create", authMiddleware, addNewCategoryController)
+categoryRouter.get("/all", verifyAuthTokenAndRole([ROLES.admin]), getAllCategoriesController)
 
-categoryRouter.get("/all", authMiddleware, getAllCategoriesController)
+categoryRouter.put("/edit", verifyAuthTokenAndRole([ROLES.admin]), editCategoryController)
 
-categoryRouter.put("/edit", authMiddleware, editCategoryController)
-
-categoryRouter.put("/update-status", authMiddleware, updateCategoryStatusController)
+categoryRouter.put("/update-status", verifyAuthTokenAndRole([ROLES.admin]), updateCategoryStatusController)
 
 export default categoryRouter

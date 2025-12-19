@@ -7,6 +7,7 @@ exports.updateTeamMemberStatus = exports.editTeamMemberController = exports.team
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const teamMember_schema_1 = __importDefault(require("../../schema/team-member/teamMember.schema"));
+const roles_1 = require("../../constants/roles");
 const createNewTeamMemberController = async (req, res) => {
     try {
         const { name, email, password, role, status } = req.body;
@@ -25,11 +26,10 @@ const createNewTeamMemberController = async (req, res) => {
             status: status
         });
         if (saveNewUser) {
-            res.status(200).send({ result: saveNewUser, message: "Admin created successfully" });
+            res.status(200).send({ result: saveNewUser, message: role === roles_1.ROLES.admin ? "Admin created successfully" : "Team member created successfully" });
         }
     }
     catch (err) {
-        console.log("err ", err);
         res.status(400).send({ result: "Failed to ceate new user" });
     }
 };
@@ -39,18 +39,18 @@ const teamMemberLoginController = async (req, res) => {
         const { email, password } = req.body;
         const checkIfEmailExists = await teamMember_schema_1.default.findOne({ email: email });
         if (!checkIfEmailExists) {
-            res.status(400).send({ result: "Email does not exist" });
+            res.status(400).send({ result: "", message: "Email does not exist" });
             return;
         }
         const verifyPassword = await bcrypt_1.default.compare(password, checkIfEmailExists?.password);
         if (!verifyPassword) {
-            res.status(400).send({ result: "Password is incorrect" });
+            res.status(400).send({ result: "", message: "Password is incorrect" });
             return;
         }
         const jwtSecretKey = process.env.JWT_SECRET_KEY;
         const authToken = await jsonwebtoken_1.default.sign({
-            email: checkIfEmailExists?.email,
-        }, jwtSecretKey, { expiresIn: "1y" });
+            role: checkIfEmailExists?.role,
+        }, jwtSecretKey, { expiresIn: "1d" });
         if (authToken) {
             res
                 .status(200)
@@ -90,11 +90,11 @@ const updateTeamMemberStatus = async (req, res) => {
             status
         }, { new: true });
         if (updateTeamMemberStatus) {
-            res.status(200).send({ result: updateTeamMemberStatus, message: "Team member status updated successfully" });
+            res.status(200).send({ result: updateTeamMemberStatus, message: "Status updated successfully" });
         }
     }
     catch (err) {
-        res.status(400).send({ result: "Failed to update team member status" });
+        res.status(400).send({ result: "Failed to update status" });
     }
 };
 exports.updateTeamMemberStatus = updateTeamMemberStatus;
