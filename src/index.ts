@@ -39,7 +39,6 @@ app.use("/author", authorRouter);
 console.log("BOOT: index.ts loaded");
 
 const startServer = async () => {
-    await connectDatabase();
 
     const PORT = Number(process.env.PORT) || 5000;
 
