@@ -6,47 +6,58 @@ import { ROLES } from "../../constants/roles";
 
 
 export const createNewTeamMemberController = async (req: Request, res: Response) => {
-    try {
-        console.log("BODY:", { ...req.body, password: "***" });
 
-        if (!req.body || Object.keys(req.body).length === 0) {
-            return res.status(400).json({ result: "Request body missing" });
-        }
+    try {
+        console.log("BODY:", req.body);
 
         const { name, email, password, role, status } = req.body;
+        const checkIfEmailExists = await TeamMember.findOne({ email: email });
 
-        const checkIfEmailExists = await TeamMember.findOne({ email });
         if (checkIfEmailExists) {
-            return res.status(400).json({ result: "Email already exists" });
+            res.status(400).send({ result: "Email already exists" });
+            return;
         }
 
-        if (!name) return res.status(400).json({ result: "Name is required" });
-        if (!email) return res.status(400).json({ result: "Email is required" });
-        if (!password) return res.status(400).json({ result: "Password is required" });
-        if (!role) return res.status(400).json({ result: "Role is required" });
+        if (!name) {
+            res.status(400).send({ result: "Name is required" });
+            return;
+        }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        if (!email) {
+            res.status(400).send({ result: "Email is required" });
+            return;
+        }
+
+        if (!password) {
+            res.status(400).send({ result: "Password is required" });
+            return;
+        }
+
+        if (!role) {
+            res.status(400).send({ result: "Role is required" });
+            return;
+        }
+
+        const saltRounds = 10;
+
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         const saveNewUser = await TeamMember.create({
-            name,
-            email,
+            name: name,
+            email: email,
             password: hashedPassword,
-            role,
-            status,
+            role: role,
+            status: status
         });
 
-        return res.status(201).json({
-            result: saveNewUser,
-            message:
-                role === ROLES.admin
-                    ? "Admin created successfully"
-                    : "Team member created successfully",
-        });
-    } catch (err) {
-        console.error("Create user error:", err);
-        return res.status(500).json({ result: "Failed to create new user" });
+        if (saveNewUser) {
+            res.status(200).send({ result: saveNewUser, message: role === ROLES.admin ? "Admin created successfully" : "Team member created successfully" });
+        }
     }
-};
+    catch (err) {
+        res.status(400).send({ result: "Failed to ceate new user" });
+    }
+}
 
 export const teamMemberLoginController = async (req: Request, res: Response) => {
     try {
