@@ -29,6 +29,15 @@ const startServer = async () => {
     try {
         await connectDatabase();
 
+        app.get("/", (_req, res) => {
+            res.status(200).send("Backend is alive");
+        });
+
+        app.get("/health", (_req, res) => {
+            res.status(200).send("OK");
+        });
+
+
         app.use("/user", teamMemberRouter);
         app.use("/blog", blogRouter);
         app.use("/category", categoryRouter);
