@@ -4,7 +4,7 @@ import { verifyAuthTokenAndRole } from "../../middleware/auth.middleware.js";
 import { ROLES } from "../../constants/roles.js";
 const teamMemberRouter = express.Router();
 
-teamMemberRouter.post("/create", verifyAuthTokenAndRole([ROLES.admin]), createNewTeamMemberController)
+teamMemberRouter.post("/create", createNewTeamMemberController)
 
 teamMemberRouter.post("/login", teamMemberLoginController)
 
