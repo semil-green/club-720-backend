@@ -10,16 +10,29 @@ import teamMemberRouter from "./route/team-member/teamMember.route.js";
 import authorRouter from "./route/author/author.route.js";
 
 dotenv.config();
+
 const app = express();
 
 app.use(cors());
-
 app.use(express.json());
-connectDatabase();
 
-app.use("/user", teamMemberRouter);
-app.use("/blog", blogRouter);
-app.use("/category", categoryRouter);
-app.use("/author", authorRouter);
+const startServer = async () => {
+    try {
+        await connectDatabase();
 
-app.listen(process.env.MONGODB_PORT, () => console.log(`server running : ${process.env.MONGODB_PORT}`));
+        app.use("/user", teamMemberRouter);
+        app.use("/blog", blogRouter);
+        app.use("/category", categoryRouter);
+        app.use("/author", authorRouter);
+
+        const PORT = process.env.PORT || 5000;
+        app.listen(PORT, () =>
+            console.log(`server running : ${PORT}`)
+        );
+    } catch (error) {
+        console.error("Failed to start server", error);
+        process.exit(1);
+    }
+};
+
+startServer();
