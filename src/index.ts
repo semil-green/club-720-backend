@@ -2,6 +2,15 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
+process.on("uncaughtException", (err) => {
+    console.error("UNCAUGHT EXCEPTION:", err);
+    process.exit(1);
+});
+
+process.on("unhandledRejection", (reason) => {
+    console.error("UNHANDLED REJECTION:", reason);
+});
+
 import connectDatabase from "./database/database.js";
 
 import blogRouter from "./route/blog/blog.route.js";
