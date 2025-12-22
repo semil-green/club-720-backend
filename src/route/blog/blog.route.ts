@@ -1,5 +1,5 @@
 import express from "express";
-import { addNewBlogController, deleteBlogController, editBlogController, getAllBlogsController, getBlogByIdController, getWebsiteBlogsController, globalSearchBlogsController, updateBlogStatusController } from "../../controller/blogs/blogs.controller";
+import { addNewBlogController, deleteBlogController, editBlogController, getAllBlogsController, getBlogBySlugController, getWebsiteBlogsController, globalSearchBlogsController, updateBlogStatusController } from "../../controller/blogs/blogs.controller";
 import { verifyAuthTokenAndRole } from "../../middleware/auth.middleware";
 import { ROLES } from "../../constants/roles";
 const blogRouter = express.Router();
@@ -15,8 +15,7 @@ blogRouter.put("/update-status", verifyAuthTokenAndRole([ROLES.admin, ROLES.writ
 
 blogRouter.delete("/delete", verifyAuthTokenAndRole([ROLES.admin, ROLES.writer]), deleteBlogController)
 
-blogRouter.post("/get-by-id/:id", verifyAuthTokenAndRole([ROLES.admin, ROLES.writer]), getBlogByIdController)
-
+blogRouter.post("/get-by-slug/:slug", verifyAuthTokenAndRole([ROLES.admin, ROLES.writer]), getBlogBySlugController)
 
 // website routes
 

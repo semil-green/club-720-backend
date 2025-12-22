@@ -34,7 +34,6 @@ export const addNewBlogController = [
                 result: saveBlog,
             });
         } catch (err) {
-            console.error(err);
             return res.status(500).send({ message: "Failed to add new blog" });
         }
     },
@@ -174,13 +173,13 @@ export const deleteBlogController = async (req: Request, res: Response) => {
     }
 }
 
-export const getBlogByIdController = async (req: Request, res: Response) => {
+export const getBlogBySlugController = async (req: Request, res: Response) => {
 
     try {
 
-        const { slug } = req.body;
+        const { slug } = req.params;
 
-        const blog = await Blogs.findOne({ slug })
+        const blog = await Blogs.findOne({ slug: slug })
 
         if (blog) {
             res.status(200).send({ message: "Blog fetched successfully", result: blog })
