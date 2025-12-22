@@ -30,20 +30,36 @@ export const addNewAuthorController = async (req: Request, res: Response) => {
     }
 }
 
+
 export const getAllAuthorsController = async (req: Request, res: Response) => {
-
     try {
+        const page = Number(req.body.page || req.query.page || 1);
+        const limit = Number(req.body.limit || req.query.limit || 10);
 
-        const authors = await Author.find({});
+        const skip = (page - 1) * limit;
 
-        if (authors) {
-            res.status(200).send({ authors });
-        }
+        const [authors, totalAuthors] = await Promise.all([
+            Author.find({})
+                .skip(skip)
+                .limit(limit)
+                .sort({ createdAt: -1 }),
+            Author.countDocuments(),
+        ]);
+
+        res.status(200).send({
+            authors,
+            pagination: {
+                total: totalAuthors,
+                page,
+                limit,
+                totalPages: Math.ceil(totalAuthors / limit),
+            },
+        });
+    } catch (err) {
+        res.status(400).send({ result: "Failed to fetch authors" });
     }
-    catch (err) {
-        res.status(400).send({ result: "Failed to fetch authors" })
-    }
-}
+};
+
 
 
 export const editAuthorController = async (req: Request, res: Response) => {
