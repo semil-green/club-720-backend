@@ -179,7 +179,7 @@ export const getBlogBySlugController = async (req: Request, res: Response) => {
 
         const { slug } = req.params;
 
-        const blog = await Blogs.findOne({ slug: slug })
+        const blog = await Blogs.findOne({ slug: slug }).populate("category").populate("author")
 
         if (blog) {
             res.status(200).send({ message: "Blog fetched successfully", result: blog })
