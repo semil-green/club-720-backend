@@ -152,3 +152,23 @@ export const getAllTeamMembersController = async (req: Request, res: Response) =
         res.status(400).send({ result: "Failed to fetch team members" });
     }
 }
+
+export const updateTeamMemberPasswordController = async (req: Request, res: Response) => {
+
+    try {
+        const { id, password } = req.body;
+        const saltRounds = 10;
+
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        const updateTeamMemberPassword = await TeamMember.findByIdAndUpdate(id, {
+            password: hashedPassword
+        }, { new: true });
+
+        if (updateTeamMemberPassword) {
+            res.status(200).send({ result: updateTeamMemberPassword, message: "Password updated successfully" });
+        }
+    }
+    catch (err) {
+        res.status(400).send({ result: "Failed to update password" });
+    }
+}
