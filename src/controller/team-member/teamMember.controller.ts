@@ -69,6 +69,11 @@ export const teamMemberLoginController = async (req: Request, res: Response) => 
             return;
         }
 
+        if (checkIfEmailExists.status === false) {
+            res.status(400).send({ result: "", message: "Account is deactivated." });
+            return;
+        }
+
         const verifyPassword = await bcrypt.compare(
             password,
             checkIfEmailExists?.password,
