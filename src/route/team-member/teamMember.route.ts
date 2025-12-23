@@ -1,5 +1,5 @@
 import express from "express"
-import { createNewTeamMemberController, editTeamMemberController, teamMemberLoginController, updateTeamMemberStatus } from "../../controller/team-member/teamMember.controller";
+import { createNewTeamMemberController, editTeamMemberController, getAllTeamMembersController, teamMemberLoginController, updateTeamMemberStatus } from "../../controller/team-member/teamMember.controller";
 import { verifyAuthTokenAndRole } from "../../middleware/auth.middleware";
 import { ROLES } from "../../constants/roles";
 const teamMemberRouter = express.Router();
@@ -11,5 +11,7 @@ teamMemberRouter.post("/login", teamMemberLoginController)
 teamMemberRouter.put("/edit", verifyAuthTokenAndRole([ROLES.admin]), editTeamMemberController)
 
 teamMemberRouter.put("/update-status", verifyAuthTokenAndRole([ROLES.admin]), updateTeamMemberStatus)
+
+teamMemberRouter.get("/all", verifyAuthTokenAndRole([ROLES.admin]), getAllTeamMembersController)
 
 export default teamMemberRouter

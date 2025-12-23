@@ -142,3 +142,13 @@ export const updateTeamMemberStatus = async (req: Request, res: Response) => {
         res.status(400).send({ result: "Failed to update status" });
     }
 }
+
+export const getAllTeamMembersController = async (req: Request, res: Response) => {
+
+    try {
+        const teamMembers = await TeamMember.find();
+        res.status(200).send({ result: teamMembers });
+    } catch (error) {
+        res.status(400).send({ result: "Failed to fetch team members" });
+    }
+}
