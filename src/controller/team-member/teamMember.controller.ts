@@ -91,7 +91,7 @@ export const teamMemberLoginController = async (req: Request, res: Response) => 
                 role: checkIfEmailExists?.role,
             },
             jwtSecretKey,
-            { expiresIn: "1d" },
+            { expiresIn: "1d" }
         );
 
         if (authToken) {
@@ -151,8 +151,35 @@ export const updateTeamMemberStatus = async (req: Request, res: Response) => {
 export const getAllTeamMembersController = async (req: Request, res: Response) => {
 
     try {
-        const teamMembers = await TeamMember.find();
-        res.status(200).send({ result: teamMembers });
+        const page = Number(req.body.page || req.query.page || 1);
+        const limit = Number(req.body.limit || req.query.limit || 10);
+        const search = String(req.body.search || req.query.search || "").trim();
+
+        const skip = (page - 1) * limit;
+
+        let filter: any = {};
+
+        if (search !== "") {
+            filter = {
+                $or: [
+                    { name: { $regex: search, $options: "i" } }
+                ]
+            };
+        }
+
+        const [teamMembers, totalTeamMembers] = await Promise.all([
+            TeamMember.find(filter)
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit),
+            TeamMember.countDocuments(filter),
+        ])
+
+        res.status(200).send({
+            result: teamMembers,
+            pagination:
+                { total: totalTeamMembers, page, limit, totalPages: Math.ceil(totalTeamMembers / limit) }
+        });
     } catch (error) {
         res.status(400).send({ result: "Failed to fetch team members" });
     }

@@ -32,20 +32,26 @@ export const addNewCategoryController = async (req: Request, res: Response) => {
     }
 }
 
-
 export const getAllCategoriesController = async (req: Request, res: Response) => {
     try {
-        const page = Number(req.body.page || req.query.page || 1);
-        const limit = Number(req.body.limit || req.query.limit || 10);
+        const page = Number(req.query.page || req.body.page || 1);
+        const limit = Number(req.query.limit || req.body.limit || 10);
+        const search = String(req.query.search || req.body.search || "").trim();
 
         const skip = (page - 1) * limit;
 
+        const filter: any = {};
+
+        if (search) {
+            filter.name = { $regex: search, $options: "i" };
+        }
+
         const [categories, totalCategories] = await Promise.all([
-            Category.find({})
+            Category.find(filter)
+                .sort({ createdAt: -1 })
                 .skip(skip)
-                .limit(limit)
-                .sort({ createdAt: -1 }),
-            Category.countDocuments(),
+                .limit(limit),
+            Category.countDocuments(filter),
         ]);
 
         res.status(200).send({
@@ -58,10 +64,10 @@ export const getAllCategoriesController = async (req: Request, res: Response) =>
             },
         });
     } catch (err) {
+        console.error(err);
         res.status(400).send({ result: "Failed to fetch categories" });
     }
 };
-
 
 export const editCategoryController = async (req: Request, res: Response) => {
 

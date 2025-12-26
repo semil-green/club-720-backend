@@ -35,16 +35,27 @@ export const getAllAuthorsController = async (req: Request, res: Response) => {
     try {
         const page = Number(req.body.page || req.query.page || 1);
         const limit = Number(req.body.limit || req.query.limit || 10);
+        const search = String(req.body.search || req.query.search || "").trim();
 
         const skip = (page - 1) * limit;
 
+        let filter: any = {};
+
+        if (search !== "") {
+            filter = {
+                $or: [
+                    { name: { $regex: search, $options: "i" } }
+                ]
+            };
+        }
+
         const [authors, totalAuthors] = await Promise.all([
-            Author.find({})
+            Author.find(filter)
+                .sort({ createdAt: -1 })
                 .skip(skip)
-                .limit(limit)
-                .sort({ createdAt: -1 }),
-            Author.countDocuments(),
-        ]);
+                .limit(limit),
+            Author.countDocuments(filter),
+        ])
 
         res.status(200).send({
             authors,
